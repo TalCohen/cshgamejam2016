@@ -26,7 +26,7 @@ public class PersistentGameManager : MonoBehaviour {
             sprite = Resources.Load<Sprite>("youLose");
         } else
         {
-            sprite = Resources.Load<Sprite>("youLose");
+            sprite = Resources.Load<Sprite>("youWin");
         }
 
         GameOverScreen.GetComponent<SpriteRenderer>().sprite = sprite;
