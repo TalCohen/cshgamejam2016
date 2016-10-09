@@ -25,7 +25,6 @@ public class PlayerCombat : MonoBehaviour {
     private Animator animator;
     
     private int direction;
-    private bool directionChanged;
     
     private static int LEFT_DIRECTION = 0;
     private static int UP_DIRECTION = 1;
@@ -53,7 +52,6 @@ public class PlayerCombat : MonoBehaviour {
 
         animator = GetComponent<Animator>();
         direction = -1;
-        directionChanged = false;
     }
 
     private void ResetInvincibility()
@@ -166,15 +164,21 @@ public class PlayerCombat : MonoBehaviour {
             // Set it to the current animator direction
             switch (direction)
             {
-                case LEFT_DIRECTION:
+                case 0:
                     aimDirection = new Vector2(-1, 0);
                     break;
-                case UP_DIRECTION:
+                case 1:
                     aimDirection = new Vector2(0, 1);
-                case RIGHT_DIRECTION:
+                    break;
+                case 2:
                     aimDirection = new Vector2(1, 0);
-                case DOWN_DIRECTION:
+                    break;
+                case 3:
                     aimDirection = new Vector2(0, -1);
+                    break;
+                default:
+                    aimDirection = new Vector2(0, -1);
+                    break;
             }
         }
 
@@ -187,7 +191,8 @@ public class PlayerCombat : MonoBehaviour {
 
     private int GetDominantDirection()
     {
-        if (aimDirection.x > aimDirection.y)
+        print(string.Format("Getting dominant direction: {0}", aimDirection));
+        if (Mathf.Abs(aimDirection.x) > Mathf.Abs(aimDirection.y))
         {
             if (aimDirection.x > 0)
             {
@@ -212,10 +217,10 @@ public class PlayerCombat : MonoBehaviour {
     {
         if (newDirection != direction)
         {
-            directionChanged = true;
             direction = newDirection;
             animator.SetInteger("Direction", direction);
             animator.SetTrigger("Direction Changed");
+            print(string.Format("changed direction to {0}", newDirection));
         }
     }
 
