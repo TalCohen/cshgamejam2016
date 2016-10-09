@@ -46,14 +46,17 @@ public class PlayerCombat : MonoBehaviour {
         // Check if any button is pressed and return the correct spell
         if (Input.GetButton(joystickId + "Blue"))
         {
+            print(string.Format("{0} set to Blue", joystickId));
             return Utilities.ColorType.Blue;
         }
         else if (Input.GetButtonDown(joystickId + "Yellow"))
         {
+            print(string.Format("{0} set to Yellow", joystickId));
             return Utilities.ColorType.Yellow;
         }
         else if (Input.GetButtonDown(joystickId + "Red"))
         {
+            print(string.Format("{0} set to Red", joystickId));
             return Utilities.ColorType.Red;
         }
         else
@@ -94,5 +97,7 @@ public class PlayerCombat : MonoBehaviour {
     {
         Utilities.ColorType spell = Utilities.GetCombinedColorType(p1Spell, p2Spell);
         print(string.Format("Casting {0}!", spell));
+        p1Spell = Utilities.ColorType.None;
+        p2Spell = Utilities.ColorType.None;
     }
 }
