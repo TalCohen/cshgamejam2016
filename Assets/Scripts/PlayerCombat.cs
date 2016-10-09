@@ -22,6 +22,16 @@ public class PlayerCombat : MonoBehaviour {
     // So we don't have to get it so often
     private SpriteRenderer spriteRenderer;
 
+    private Animator animator;
+    
+    private int direction;
+    private bool directionChanged;
+    
+    private static int LEFT_DIRECTION = 0;
+    private static int UP_DIRECTION = 1;
+    private static int RIGHT_DIRECTION = 2;
+    private static int DOWN_DIRECTION = 3;
+
 	// Use this for initialization
 	void Start () {
         j1Spell = Utilities.ColorType.None;
@@ -40,6 +50,10 @@ public class PlayerCombat : MonoBehaviour {
         health = 100;
         isInvincible = false;
         spriteRenderer = GetComponent<SpriteRenderer>();
+
+        animator = GetComponent<Animator>();
+        direction = -1;
+        directionChanged = false;
     }
 
     private void ResetInvincibility()
@@ -145,6 +159,64 @@ public class PlayerCombat : MonoBehaviour {
         
         // Set as the aim direction
         aimDirection = new Vector2(aimX, aimY).normalized;
+
+        // If they are not actively aiming in any direction
+        if (aimDirection == Vector2.zero)
+        {
+            // Set it to the current animator direction
+            switch (direction)
+            {
+                case LEFT_DIRECTION:
+                    aimDirection = new Vector2(-1, 0);
+                    break;
+                case UP_DIRECTION:
+                    aimDirection = new Vector2(0, 1);
+                case RIGHT_DIRECTION:
+                    aimDirection = new Vector2(1, 0);
+                case DOWN_DIRECTION:
+                    aimDirection = new Vector2(0, -1);
+            }
+        }
+
+        // Get which direction is our dominant one
+        int newDirection = GetDominantDirection();
+        
+        // Attempt to change the direction
+        ChangeDirection(newDirection);
+    }
+
+    private int GetDominantDirection()
+    {
+        if (aimDirection.x > aimDirection.y)
+        {
+            if (aimDirection.x > 0)
+            {
+                return RIGHT_DIRECTION;
+            } else
+            {
+                return LEFT_DIRECTION;
+            }
+        } else
+        {
+            if (aimDirection.y > 0)
+            {
+                return UP_DIRECTION;
+            } else
+            {
+                return DOWN_DIRECTION;
+            }
+        }
+    }
+    
+    private void ChangeDirection(int newDirection)
+    {
+        if (newDirection != direction)
+        {
+            directionChanged = true;
+            direction = newDirection;
+            animator.SetInteger("Direction", direction);
+            animator.SetTrigger("Direction Changed");
+        }
     }
 
     private void CheckCastSpell()

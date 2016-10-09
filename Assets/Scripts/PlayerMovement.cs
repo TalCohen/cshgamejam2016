@@ -10,15 +10,6 @@ public class PlayerMovement : MonoBehaviour {
     private GameObject camera;
 
     private Animator animator;
-
-    private int direction;
-    private bool directionChanged;
-
-    private static int LEFT_DIRECTION = 0;
-    private static int UP_DIRECTION = 1;
-    private static int RIGHT_DIRECTION = 2;
-    private static int DOWN_DIRECTION = 3;
-
 	
 	// Use this for initialization
 	void Start () {
@@ -27,9 +18,6 @@ public class PlayerMovement : MonoBehaviour {
 
         camera = GameObject.FindWithTag("MainCamera");
         animator = GetComponent<Animator>();
-
-        direction = -1;
-        directionChanged = false;
 	}
 	
 	// Update is called once per frame
@@ -48,70 +36,28 @@ public class PlayerMovement : MonoBehaviour {
         // Apply to the velocity
         velocity += new Vector2(moveX, moveY);
 
-        // Get which direction is our dominant one
-        int newDirection = GetDominantDirection(velocity);
 
-        // Attempt to change the direction
-        ChangeDirection(newDirection);
 
 		if (Input.GetKey(KeyCode.LeftArrow))
 		{
 			velocity.x -= MOVE_SPEED;
-            ChangeDirection(LEFT_DIRECTION);
 		}
 		
 		if (Input.GetKey(KeyCode.RightArrow))
 		{
 			velocity.x += MOVE_SPEED;
-            ChangeDirection(RIGHT_DIRECTION);
 		}
 		
 		if (Input.GetKey(KeyCode.UpArrow))
 		{
 			velocity.y += MOVE_SPEED;
-            ChangeDirection(UP_DIRECTION);
 		}
 		
 		if (Input.GetKey(KeyCode.DownArrow))
 		{
 			velocity.y -= MOVE_SPEED;
-            ChangeDirection(DOWN_DIRECTION);
 		}
 	}
-
-    private int GetDominantDirection(Vector2 velocity)
-    {
-        if (velocity.x > velocity.y)
-        {
-            if (velocity.x > 0)
-            {
-                return RIGHT_DIRECTION;
-            } else
-            {
-                return LEFT_DIRECTION;
-            }
-        } else
-        {
-            if (velocity.y > 0)
-            {
-                return UP_DIRECTION;
-            } else
-            {
-                return DOWN_DIRECTION;
-            }
-        }
-    }
-
-    private void ChangeDirection(int newDirection)
-    {
-        if (newDirection != direction)
-        {
-            directionChanged = true;
-            direction = newDirection;
-            animator.SetInteger("Direction", direction);
-            animator.SetTrigger("Direction Changed");
-        }
-    }
 	
 	private void UpdateMovement()
 	{
