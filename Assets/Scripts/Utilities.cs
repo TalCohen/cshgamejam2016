@@ -17,56 +17,27 @@ public static class Utilities {
     public static ColorType GetCombinedColorType(ColorType c1, ColorType c2)
     {
         return (ColorType)(c1 | c2);
-//        if (c1 == c2)
-//        {
-//            return c1;
-//        }
-//
-//        if (c1 == ColorType.None)
-//        {
-//            return c2;
-//        }
-//
-//        if (c2 == ColorType.None)
-//        {
-//            return c1;
-//        }
-//
-//        switch(c1)
-//        {
-//            case ColorType.Blue:
-//                if (c2 == ColorType.Yellow)
-//                {
-//                    return ColorType.Green
-//                } 
-//                else if (c2 == ColorType.Red)
-//                {
-//                    return ColorType.Purple;
-//                }
-//                else
-//                {
-//                    Debug.LogError("Invalid color combination!");
-//                    return ColorType.None;
-//                }
-//                break;
-//            case ColorType.Yellow:
-//                if (c2 == ColorType.Blue)
-//                {
-//                    return ColorType.Green;
-//                }
-//                else if (c2 == ColorType.Red)
-//                {
-//                    return ColorType.Orange;
-//                }
-//                else
-//                {
-//                    Debug.LogError("Invalid color combination!");
-//                    return ColorType.None;
-//                }
-//                break;
-//            case ColorType.Red:
-//                if (c2 == ColorType.
-//        }
+    }
+
+    public static Color ColorTypeToColor(ColorType colorType)
+    {
+        switch (colorType)
+        {
+            case ColorType.Blue:
+                return new Color(63/255.0f, 115/255.0f, 184/255.0f);
+            case ColorType.Yellow:
+                return new Color(217/255.0f, 234/255, 12/255.0f);
+            case ColorType.Green:
+                return new Color(63/255.0f, 184/255, 80/255.0f);
+            case ColorType.Red:
+                return new Color(184/255.0f, 63/255.0f, 63/255.0f);
+            case ColorType.Purple:
+                return new Color(132/255.0f, 63/255.0f, 184/255.0f);
+            case ColorType.Orange:
+                return new Color(232/255.0f, 126/255.0f, 14/255.0f);
+            default:
+                return new Color(0, 0, 0);
+        }
     }
 
     public static float GetAveragedAxis(string axis)

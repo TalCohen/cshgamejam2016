@@ -2,19 +2,19 @@
 using System.Collections;
 
 public class PlayerMovement : MonoBehaviour {
-    private float MOVE_SPEED = 0.3f;
+    private float MOVE_SPEED = 5.0f;
 
 	private Vector2 velocity;
     private Vector2 acceleration;
 	
 	// Use this for initialization
-	void Start() {
+	void Start () {
 		velocity = Vector2.zero;
 		acceleration = Vector2.zero;
 	}
 	
 	// Update is called once per frame
-	void Update() {
+	void Update () {
 		GetInput();
 		UpdateMovement();
 	}
@@ -52,7 +52,7 @@ public class PlayerMovement : MonoBehaviour {
 	void UpdateMovement()
 	{
 		velocity += acceleration;
-		gameObject.transform.position += (Vector3)velocity;
+		gameObject.transform.position += (Vector3)velocity * Time.deltaTime;
 		acceleration = Vector2.zero;
 		velocity = Vector2.zero;
 	}

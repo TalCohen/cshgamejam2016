@@ -2,6 +2,8 @@
 using System.Collections;
 
 public class PlayerCombat : MonoBehaviour {
+    public GameObject SpellPrefab;
+
     private Utilities.ColorType p1Spell;
     private Utilities.ColorType p2Spell;
 
@@ -23,6 +25,14 @@ public class PlayerCombat : MonoBehaviour {
         UpdateSpells();
         UpdateAimDirection();
         CheckCastSpell();
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            p1Spell = Utilities.ColorType.Red;
+            p2Spell = Utilities.ColorType.Blue;
+            CastSpell();
+            ResetSpells();
+        }
     }
 
     private void UpdateSpells()
@@ -90,15 +100,22 @@ public class PlayerCombat : MonoBehaviour {
             else
             {
                 CastSpell();
-                p1Spell = Utilities.ColorType.None;
-                p2Spell = Utilities.ColorType.None;
+                ResetSpells();
             }
         }
     }
 
     void CastSpell()
     {
-        Utilities.ColorType spell = Utilities.GetCombinedColorType(p1Spell, p2Spell);
-        print(string.Format("Casting {0}!", spell));
+        Utilities.ColorType spellColor = Utilities.GetCombinedColorType(p1Spell, p2Spell);
+        print(string.Format("Casting {0}!", spellColor));
+        GameObject spell = (GameObject)Instantiate(SpellPrefab, this.gameObject.transform.position, Quaternion.identity);
+        spell.GetComponent<Spell>().SetColor(spellColor);
+    }
+
+    void ResetSpells()
+    {
+        p1Spell = Utilities.ColorType.None;
+        p2Spell = Utilities.ColorType.None;
     }
 }
