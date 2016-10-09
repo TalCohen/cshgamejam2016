@@ -2,10 +2,10 @@
 using System.Collections;
 
 public class PlayerMovement : MonoBehaviour {
-	Vector2 velocity;
-	Vector2 acceleration;
-	
-	float MOVEMENT_SPEED = 0.3f;
+    private float MOVE_SPEED = 0.3f;
+
+	private Vector2 velocity;
+    private Vector2 acceleration;
 	
 	// Use this for initialization
 	void Start() {
@@ -21,47 +21,32 @@ public class PlayerMovement : MonoBehaviour {
 	
 	void GetInput()
 	{
-		// Get the move axis value
-        float moveHorizontal = GetAxis("LHorizontal") * MOVEMENT_SPEED;
-        float moveVertical = GetAxis("LVertical") * -MOVEMENT_SPEED;
-        Debug.Log(string.Format("moveHorizontal {0}", moveHorizontal));
-        Debug.Log(string.Format("moveVertical {0}", moveVertical));
+		// Get the move axis values
+        float moveX = Utilities.GetAveragedAxis("MoveX") * MOVE_SPEED;
+        float moveY = Utilities.GetAveragedAxis("MoveY") * -MOVE_SPEED;
 
-		// Get the aim axis value
-		float aimHorizontal = GetAxis("RHorizontal");
-		float aimVertical = GetAxis("RVertical");
-
-        velocity += new Vector2(moveHorizontal, moveVertical);
+        // Apply to the velocity
+        velocity += new Vector2(moveX, moveY);
 
 		if (Input.GetKey(KeyCode.LeftArrow))
 		{
-			velocity.x -= MOVEMENT_SPEED;
+			velocity.x -= MOVE_SPEED;
 		}
 		
 		if (Input.GetKey(KeyCode.RightArrow))
 		{
-			velocity.x += MOVEMENT_SPEED;
+			velocity.x += MOVE_SPEED;
 		}
 		
 		if (Input.GetKey(KeyCode.UpArrow))
 		{
-			velocity.y += MOVEMENT_SPEED;
+			velocity.y += MOVE_SPEED;
 		}
 		
 		if (Input.GetKey(KeyCode.DownArrow))
 		{
-			velocity.y -= MOVEMENT_SPEED;
+			velocity.y -= MOVE_SPEED;
 		}
-	}
-
-	float GetAxis(string axis)
-	{
-		// Get the two axes
-        float j1Axis = Input.GetAxis ("J1" + axis);
-		float j2Axis = Input.GetAxis ("J2" + axis);
-
-		// Return their average
-		return (j1Axis + j2Axis) / 2;
 	}
 	
 	void UpdateMovement()
