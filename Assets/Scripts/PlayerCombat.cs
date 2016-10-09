@@ -338,6 +338,10 @@ public class PlayerCombat : MonoBehaviour {
             isAlive = false;
             transform.position = new Vector3();
             print("We've died!");
+
+
+            PersistentGameManager pgm = GameObject.Find("PersistentGameManager").GetComponent<PersistentGameManager>();
+            pgm.GameOver(false);
         }
     }
 }

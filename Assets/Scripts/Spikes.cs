@@ -7,7 +7,7 @@ public class Spikes : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        damage = 20;
+        damage = 70;
 	}
 	
 	// Update is called once per frame

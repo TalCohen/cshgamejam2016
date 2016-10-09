@@ -45,7 +45,11 @@ public class GameManager : MonoBehaviour {
         // Try to spawn enemies
         SpawnEnemies();
 
-        print(playerKillCount);
+        if (playerKillCount > 10)
+        {
+            PersistentGameManager pgm = GameObject.Find("PersistentGameManager").GetComponent<PersistentGameManager>();
+            pgm.GameOver(true);
+        }
 	}
 
     private void InitializeEnemySprites()

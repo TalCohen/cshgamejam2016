@@ -7,8 +7,8 @@ public static class Utilities {
     private static int MIN_ENEMY_SPAWN_RATE = 4;
     private static int MAX_ENEMY_SPAWN_RATE = 10;
 
-    private static float MIN_ENEMY_MOVE_SPEED = 0.5f;
-    private static float MAX_ENEMY_MOVE_SPEED = 2.0f;
+    private static float MIN_ENEMY_MOVE_SPEED = 4.0f;
+    private static float MAX_ENEMY_MOVE_SPEED = 7.0f;
 
     private static float BASIC_ENEMY_SPAWN_CHANCE = 0.8f;
 

@@ -23,7 +23,7 @@ public class Enemy : MonoBehaviour
     {
         playerPos = gameManager.GetPlayerPosition();
         position = transform.position;
-        damage = 10;
+        damage = 34;
     }
 
     // Update is called once per frame
