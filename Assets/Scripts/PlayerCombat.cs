@@ -43,11 +43,9 @@ public class PlayerCombat : MonoBehaviour {
 
     private Utilities.ColorType GetCurrentSpell(string joystickId)
     {
-        print(joystickId + "Blue");
         // Check if any button is pressed and return the correct spell
         if (Input.GetButton(joystickId + "Blue"))
         {
-
             return Utilities.ColorType.Blue;
         }
         else if (Input.GetButtonDown(joystickId + "Yellow"))
