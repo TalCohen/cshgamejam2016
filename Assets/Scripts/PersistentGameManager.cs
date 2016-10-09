@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class PersistentGameManager : MonoBehaviour {
-    public GameObject GameOverScreen;
+    public GameObject GameOverScreenPrefab;
 
 	// Use this for initialization
 	void Start () {
@@ -19,16 +19,19 @@ public class PersistentGameManager : MonoBehaviour {
     {
         Application.LoadLevel("GameOver");
 
+        GameObject gameOverScreen = (GameObject)Instantiate(GameOverScreenPrefab, new Vector3(), Quaternion.identity);
+
         Sprite sprite;
 
         if (playerWon)
         {
-            sprite = Resources.Load<Sprite>("youLose");
+            sprite = Resources.Load<Sprite>("youWin");
         } else
         {
-            sprite = Resources.Load<Sprite>("youWin");
+            sprite = Resources.Load<Sprite>("youLose");
+            print(sprite);
         }
 
-        GameOverScreen.GetComponent<SpriteRenderer>().sprite = sprite;
+        gameOverScreen.GetComponent<SpriteRenderer>().sprite = sprite;
     }
 }
