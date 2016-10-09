@@ -4,6 +4,11 @@ using System.Collections;
 
 public static class Utilities {
 
+    private static int MIN_ENEMY_SPAWN_RATE = 2;
+    private static int MAX_ENEMY_SPAWN_RATE = 5;
+
+    private static float BASIC_ENEMY_SPAWN_CHANCE = 0.8f;
+
     public enum ColorType 
     {
         None = 0,
@@ -14,6 +19,9 @@ public static class Utilities {
         Purple = 5,
         Orange = 6
     }
+
+    public static ColorType[] basicColorTypes = {ColorType.Blue, ColorType.Yellow, ColorType.Red};
+    public static ColorType[] advancedColorTypes = {ColorType.Green, ColorType.Purple, ColorType.Orange};
 
     public static ColorType GetCombinedColorType(ColorType c1, ColorType c2)
     {
@@ -44,6 +52,34 @@ public static class Utilities {
     public static ColorType StringToColorType(string colorString)
     {
         return (ColorType)Enum.Parse(typeof(ColorType), colorString);
+    }
+
+    public static ColorType GetWeightedRandomColorType()
+    {
+        ColorType[] colorTypes;
+
+        // Get a random percentage
+
+        float percentage = UnityEngine.Random.Range(0, 100) / 100.0f;
+
+        // Determine if this should be a basic or advanced enemy
+        if (percentage < BASIC_ENEMY_SPAWN_CHANCE)
+        {
+            colorTypes = basicColorTypes;
+        }
+        else
+        {
+            colorTypes = advancedColorTypes;
+        }
+
+        // Return a random color type in that list
+        int index = UnityEngine.Random.Range(0, colorTypes.Length);
+        return colorTypes [index];
+    }
+
+    public static float GetNextEnemySpawnTime()
+    {
+        return UnityEngine.Random.Range(MIN_ENEMY_SPAWN_RATE, MAX_ENEMY_SPAWN_RATE);
     }
 
     public static float GetAveragedAxis(string axis)

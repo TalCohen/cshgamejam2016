@@ -15,6 +15,11 @@ public class GameManager : MonoBehaviour {
     private RuntimeAnimatorController[] enemyAnimatorControllers;
     private Dictionary<string, int> enemyAnimatorControllersMap;
 
+    private float levelTimer;
+    private float nextEnemySpawnTime;
+
+    private static float INITIAL_ENEMY_SPAWN_TIME = 2.0f;
+
 	// Use this for initialization
 	void Start () {
         player = (GameObject)Instantiate(PlayerPrefab, new Vector3(0, 0, 0), Quaternion.identity);
@@ -23,14 +28,21 @@ public class GameManager : MonoBehaviour {
         InitializeEnemySprites();
         InitializeEnemyAnimatorControllers();
 
-        SpawnEnemy("Red", new Vector3(5, 0, 0));
+        levelTimer = 0.0f;
+        nextEnemySpawnTime = INITIAL_ENEMY_SPAWN_TIME;
+
+        //SpawnEnemy("Red", new Vector3(5, 0, 0));
 
         Instantiate(SpikesPrefab, new Vector3(0, -5.0f, 0), Quaternion.identity);
 	}
 	
 	// Update is called once per frame
 	void Update () {
+        // Update the timer
+        levelTimer += Time.deltaTime;
 
+        // Try to spawn enemies
+        SpawnEnemies();
 	}
 
     private void InitializeEnemySprites()
@@ -61,8 +73,10 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    private void SpawnEnemy(string colorString, Vector3 pos)
+    private void SpawnEnemy(Utilities.ColorType colorType, Vector3 pos)
     {
+        string colorString = colorType.ToString();
+
         // Create the enemy object
         GameObject enemyObject = (GameObject)Instantiate(EnemyPrefab, pos, Quaternion.identity);
 
@@ -76,8 +90,27 @@ public class GameManager : MonoBehaviour {
 
         // Get the enemy component and set intial values
         Enemy enemy = enemyObject.GetComponent<Enemy>();
-        enemy.SetColorType(Utilities.StringToColorType(colorString));
+        enemy.SetColorType(colorType);
         enemy.SetGameManager(this);
+    }
+
+    private void SpawnEnemies()
+    {
+        // If enough time has passed to spawn a new enemy
+        if (levelTimer > nextEnemySpawnTime)
+        {
+            // Update the next spawn time
+            nextEnemySpawnTime += Utilities.GetNextEnemySpawnTime();
+
+            // Get a spawn point
+            Vector3 pos = new Vector3(0, 0, 0);
+
+            // Get a color type
+            Utilities.ColorType colorType = Utilities.GetWeightedRandomColorType();
+
+            // Spawn the new enemy
+            SpawnEnemy(colorType, pos);
+        }
     }
 
     public Vector3 GetPlayerPosition()
