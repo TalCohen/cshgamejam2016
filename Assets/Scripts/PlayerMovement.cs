@@ -11,6 +11,14 @@ public class PlayerMovement : MonoBehaviour {
 
     private Animator animator;
 
+    private int direction;
+    private bool directionChanged;
+
+    private static int LEFT_DIRECTION = 0;
+    private static int UP_DIRECTION = 1;
+    private static int RIGHT_DIRECTION = 2;
+    private static int DOWN_DIRECTION = 3;
+
 	
 	// Use this for initialization
 	void Start () {
@@ -19,6 +27,9 @@ public class PlayerMovement : MonoBehaviour {
 
         camera = GameObject.FindWithTag("MainCamera");
         animator = GetComponent<Animator>();
+
+        direction = -1;
+        directionChanged = false;
 	}
 	
 	// Update is called once per frame
@@ -40,32 +51,42 @@ public class PlayerMovement : MonoBehaviour {
 		if (Input.GetKey(KeyCode.LeftArrow))
 		{
 			velocity.x -= MOVE_SPEED;
-            animator.SetInteger("Direction", 0);
+            CheckChangeDirection(LEFT_DIRECTION);
 		}
 		
 		if (Input.GetKey(KeyCode.RightArrow))
 		{
 			velocity.x += MOVE_SPEED;
-            animator.SetInteger("Direction", 2);
+            CheckChangeDirection(RIGHT_DIRECTION);
 		}
 		
 		if (Input.GetKey(KeyCode.UpArrow))
 		{
 			velocity.y += MOVE_SPEED;
-            animator.SetInteger("Direction", 1);
+            CheckChangeDirection(UP_DIRECTION);
 		}
 		
 		if (Input.GetKey(KeyCode.DownArrow))
 		{
 			velocity.y -= MOVE_SPEED;
-            animator.SetInteger("Direction", 3);
+            CheckChangeDirection(DOWN_DIRECTION);
 		}
 	}
+
+    private void CheckChangeDirection(int newDirection)
+    {
+        if (newDirection != direction)
+        {
+            directionChanged = true;
+            direction = newDirection;
+            animator.SetInteger("Direction", direction);
+            animator.SetTrigger("Direction Changed");
+        }
+    }
 	
 	private void UpdateMovement()
 	{
         animator.SetFloat("Speed", velocity.magnitude);
-        print(velocity.magnitude);
         velocity += acceleration;
 		gameObject.transform.position += (Vector3)velocity * Time.deltaTime;
 		acceleration = Vector2.zero;

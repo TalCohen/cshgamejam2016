@@ -227,7 +227,6 @@ public class PlayerCombat : MonoBehaviour {
         // Lose some health
         health -= damage;
         print("Lost health...");
-        print(health);
     
 
         // Check to see if we're alive
