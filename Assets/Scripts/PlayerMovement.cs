@@ -8,6 +8,8 @@ public class PlayerMovement : MonoBehaviour {
     private Vector2 acceleration;
 
     private GameObject camera;
+
+    private int test;
 	
 	// Use this for initialization
 	void Start () {
@@ -68,5 +70,51 @@ public class PlayerMovement : MonoBehaviour {
             this.gameObject.transform.position.x,
             this.gameObject.transform.position.y,
             camera.transform.position.z);
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        HandleTrigger(other);
+    }
+    
+    void OnTriggerStay2D(Collider2D other)
+    {
+        HandleTrigger(other);
+    }
+    
+    private void HandleTrigger(Collider2D other)
+    {
+        // Check to see if we're colliding with a wall
+        if (other.tag == "Wall")
+        {
+            StayInBounds(other);
+        }
+    }
+
+    private void StayInBounds(Collider2D wall)
+    {
+        float newX = transform.position.x;
+        float newY = transform.position.y;
+
+        // Handle colliding with each wall
+        if (wall.name == "LeftWall")
+        {
+            newX = Mathf.Max(newX, wall.transform.position.x);
+        }
+        if (wall.name == "RightWall")
+        {
+            newX = Mathf.Min(newX, wall.transform.position.x);
+        }
+        if (wall.name == "TopWall")
+        {
+            newY = Mathf.Min(newY, wall.transform.position.y);
+        }
+        if (wall.name == "BottomWall")
+        {
+            newY = Mathf.Max(newY, wall.transform.position.y);
+        }
+        
+        // Apply the new position
+        transform.position = new Vector3(newX, newY, 0);
     }
 }
