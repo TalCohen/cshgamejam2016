@@ -16,13 +16,6 @@ public class PlayerCombat : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         GetInput();
-
-        if (Input.GetButtonDown("J1Blue"))
-        {
-            print("It's down");
-        }
-        print(p1Spell);
-        print(p2Spell);
 	}
 
     private void GetInput()
@@ -35,15 +28,16 @@ public class PlayerCombat : MonoBehaviour {
     private void UpdateSpells()
     {
         // Update the spells of each player
-        if (p1Spell == Utilities.ColorType.None)
+        Utilities.ColorType spell = GetCurrentSpell("J1");
+        if (spell != Utilities.ColorType.None)
         {
-            print("ITS NONE");
-            p1Spell = GetCurrentSpell("J1");
+            p1Spell = p1Spell;
         }
 
-        if (p2Spell == Utilities.ColorType.None)
+        spell = GetCurrentSpell("J2");
+        if (spell != Utilities.ColorType.None)
         {
-            p2Spell = GetCurrentSpell("J2");
+            p2Spell = p1Spell;
         }
     }
 
@@ -55,7 +49,6 @@ public class PlayerCombat : MonoBehaviour {
         {
 
             return Utilities.ColorType.Blue;
-            print("BLUE!");
         }
         else if (Input.GetButtonDown(joystickId + "Yellow"))
         {
@@ -67,7 +60,6 @@ public class PlayerCombat : MonoBehaviour {
         }
         else
         {
-            print("nothing");
             return Utilities.ColorType.None;
         }
        
