@@ -85,10 +85,13 @@ public class PlayerCombat : MonoBehaviour {
             if (p1Spell == Utilities.ColorType.None || p2Spell == Utilities.ColorType.None)
             {
                 // Give some kind of feedback letting them know they need to choose their spells
+                print("Both players must have a spell chosen.");
             }
             else
             {
                 CastSpell();
+                p1Spell = Utilities.ColorType.None;
+                p2Spell = Utilities.ColorType.None;
             }
         }
     }
@@ -97,7 +100,5 @@ public class PlayerCombat : MonoBehaviour {
     {
         Utilities.ColorType spell = Utilities.GetCombinedColorType(p1Spell, p2Spell);
         print(string.Format("Casting {0}!", spell));
-        p1Spell = Utilities.ColorType.None;
-        p2Spell = Utilities.ColorType.None;
     }
 }
