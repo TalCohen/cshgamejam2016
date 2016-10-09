@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Spell : MonoBehaviour {
 
-    private float MOVE_SPEED = 2.0f;
+    private float MOVE_SPEED = 3.0f;
 
     private Utilities.ColorType colorType;
 
@@ -56,6 +56,9 @@ public class Spell : MonoBehaviour {
             {
                 // Matching colors! Kill the enemy
                 enemy.Die();
+
+                // Destroy the spell
+                Destroy(this.gameObject);
             }
             else
             {
@@ -63,7 +66,7 @@ public class Spell : MonoBehaviour {
                 // Slow enemy down?
             }
 
-            Destroy(this.gameObject);
+            //Destroy(this.gameObject);
         }
     }
 }
