@@ -31,6 +31,9 @@ public class PlayerCombat : MonoBehaviour {
     private static int RIGHT_DIRECTION = 2;
     private static int DOWN_DIRECTION = 3;
 
+    private bool isSpellOnCooldown;
+    private static float SPELL_COOLDOWN_TIME = 1.0f;
+
 	// Use this for initialization
 	void Start () {
         j1Spell = Utilities.ColorType.None;
@@ -52,6 +55,8 @@ public class PlayerCombat : MonoBehaviour {
 
         animator = GetComponent<Animator>();
         direction = -1;
+
+        isSpellOnCooldown = false;
     }
 
     private void ResetInvincibility()
@@ -229,6 +234,13 @@ public class PlayerCombat : MonoBehaviour {
         // Check to see if either joystick is trying to cast the spell
         if (Input.GetButtonDown("J1CastSpell") || Input.GetButtonDown("J2CastSpell"))
         {
+            // Check to see if casting a spell is still on cooldown
+            if (isSpellOnCooldown)
+            {
+                print("Casting spell is still on cooldown!");
+                return;
+            }
+
             // Check to see if either joystick doesn't have a spell selected
             if (j1Spell == Utilities.ColorType.None || j2Spell == Utilities.ColorType.None)
             {
@@ -242,9 +254,6 @@ public class PlayerCombat : MonoBehaviour {
 
                 // Cast the spell of that color
                 CastSpell(spellColorType);
-
-                // Reset the joystick's chosen spells
-                ResetSpells();
             }
         }
     }
@@ -258,6 +267,18 @@ public class PlayerCombat : MonoBehaviour {
         Spell spell = spellObject.GetComponent<Spell>();
         spell.SetColorType(spellColorType);
         spell.SetDirection(aimDirection);
+
+        // Reset the joystick's chosen spells
+        ResetSpells();
+
+        StartCoroutine(ActivateSpellCooldown());
+    }
+
+    private IEnumerator ActivateSpellCooldown()
+    {
+        isSpellOnCooldown = true;
+        yield return new WaitForSeconds(SPELL_COOLDOWN_TIME);
+        isSpellOnCooldown = false;
     }
 
     private void ResetSpells()

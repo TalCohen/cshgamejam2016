@@ -10,7 +10,7 @@ public class Enemy : MonoBehaviour
     private Vector3 position;
     private Vector3 velocity;
 
-    private static float MOVE_SPEED = 2;
+    private float moveSpeed;
 
     private Utilities.ColorType colorType;
 
@@ -38,7 +38,7 @@ public class Enemy : MonoBehaviour
     Vector3 UpdateVelocity(Vector3 playerPosition)
     {
         Vector3 velocity = playerPosition - transform.position;
-        velocity = velocity.normalized * MOVE_SPEED;
+        velocity = velocity.normalized * moveSpeed;
         return velocity;
     }
 
@@ -60,14 +60,20 @@ public class Enemy : MonoBehaviour
         return this.colorType;
     }
 
+    public void SetMoveSpeed(float moveSpeed)
+    {
+        this.moveSpeed = moveSpeed;
+    }
+
     public void Die()
     {
+        // Tell the Game Manager
+        gameManager.IncrementKillCount();
+
         // Remove the box collider
         Destroy(GetComponent<BoxCollider2D>());
 
         // Start fading out over time
         StartCoroutine(Utilities.FadeOut(this.gameObject, DEATH_ANIMATION_FRAMES));
     }
-
-
 }

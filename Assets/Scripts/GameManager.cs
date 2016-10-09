@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour {
     public GameObject SpikesPrefab;
 
     private GameObject player;
+    private int playerKillCount;
 
     private Sprite[] enemySprites;
     private Dictionary<string, int> enemySpritesMap;
@@ -22,7 +23,7 @@ public class GameManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        player = (GameObject)Instantiate(PlayerPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        player = (GameObject)Instantiate(PlayerPrefab, new Vector3(-10, 7, 0), Quaternion.identity);
 
         // Initialize enemy assets
         InitializeEnemySprites();
@@ -31,7 +32,7 @@ public class GameManager : MonoBehaviour {
         levelTimer = 0.0f;
         nextEnemySpawnTime = INITIAL_ENEMY_SPAWN_TIME;
 
-        SpawnEnemy(Utilities.ColorType.Red, new Vector3(5, 0, 0));
+        //SpawnEnemy(Utilities.ColorType.Red, new Vector3(5, 0, 0));
 
         Instantiate(SpikesPrefab, new Vector3(0, -5.0f, 0), Quaternion.identity);
 	}
@@ -42,7 +43,9 @@ public class GameManager : MonoBehaviour {
         levelTimer += Time.deltaTime;
 
         // Try to spawn enemies
-        //SpawnEnemies();
+        SpawnEnemies();
+
+        print(playerKillCount);
 	}
 
     private void InitializeEnemySprites()
@@ -92,6 +95,7 @@ public class GameManager : MonoBehaviour {
         Enemy enemy = enemyObject.GetComponent<Enemy>();
         enemy.SetColorType(colorType);
         enemy.SetGameManager(this);
+        enemy.SetMoveSpeed(Utilities.GetRandomEnemyMoveSpeed());
     }
 
     private void SpawnEnemies()
@@ -116,5 +120,10 @@ public class GameManager : MonoBehaviour {
     public Vector3 GetPlayerPosition()
     {
         return player.transform.position;
+    }
+
+    public void IncrementKillCount()
+    {
+        playerKillCount += 1;
     }
 }

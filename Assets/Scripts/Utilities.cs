@@ -4,8 +4,11 @@ using System.Collections;
 
 public static class Utilities {
 
-    private static int MIN_ENEMY_SPAWN_RATE = 2;
-    private static int MAX_ENEMY_SPAWN_RATE = 5;
+    private static int MIN_ENEMY_SPAWN_RATE = 4;
+    private static int MAX_ENEMY_SPAWN_RATE = 10;
+
+    private static float MIN_ENEMY_MOVE_SPEED = 0.5f;
+    private static float MAX_ENEMY_MOVE_SPEED = 2.0f;
 
     private static float BASIC_ENEMY_SPAWN_CHANCE = 0.8f;
 
@@ -80,6 +83,11 @@ public static class Utilities {
     public static float GetNextEnemySpawnTime()
     {
         return UnityEngine.Random.Range(MIN_ENEMY_SPAWN_RATE, MAX_ENEMY_SPAWN_RATE);
+    }
+
+    public static float GetRandomEnemyMoveSpeed()
+    {
+        return UnityEngine.Random.Range(MIN_ENEMY_MOVE_SPEED, MAX_ENEMY_MOVE_SPEED);
     }
 
     public static float GetAveragedAxis(string axis)
