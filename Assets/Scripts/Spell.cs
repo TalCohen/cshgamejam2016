@@ -55,7 +55,7 @@ public class Spell : MonoBehaviour {
             if (this.colorType == enemy.GetColorType())
             {
                 // Matching colors! Kill the enemy
-                Destroy(enemy.gameObject);
+                enemy.Die();
             }
             else
             {

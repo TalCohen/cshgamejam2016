@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class Enemy : MonoBehaviour
@@ -15,6 +15,8 @@ public class Enemy : MonoBehaviour
     private Utilities.ColorType colorType;
 
     public int damage { get; private set; }
+
+    private static int DEATH_ANIMATION_FRAMES = 20;
 
     // Use this for initialization
     void Start()
@@ -57,4 +59,15 @@ public class Enemy : MonoBehaviour
     {
         return this.colorType;
     }
+
+    public void Die()
+    {
+        // Remove the box collider
+        Destroy(GetComponent<BoxCollider2D>());
+
+        // Start fading out over time
+        StartCoroutine(Utilities.FadeOut(this.gameObject, DEATH_ANIMATION_FRAMES));
+    }
+
+
 }

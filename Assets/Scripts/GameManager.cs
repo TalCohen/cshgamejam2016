@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour {
         levelTimer = 0.0f;
         nextEnemySpawnTime = INITIAL_ENEMY_SPAWN_TIME;
 
-        //SpawnEnemy("Red", new Vector3(5, 0, 0));
+        SpawnEnemy(Utilities.ColorType.Red, new Vector3(5, 0, 0));
 
         Instantiate(SpikesPrefab, new Vector3(0, -5.0f, 0), Quaternion.identity);
 	}
@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour {
         levelTimer += Time.deltaTime;
 
         // Try to spawn enemies
-        SpawnEnemies();
+        //SpawnEnemies();
 	}
 
     private void InitializeEnemySprites()

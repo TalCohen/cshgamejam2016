@@ -91,4 +91,22 @@ public static class Utilities {
         // Return their average
         return (j1Axis + j2Axis) / 2;
     }
+
+    public static IEnumerator FadeOut(GameObject obj, int numberOfFrames)
+    {
+        SpriteRenderer[] spriteRenderers = obj.GetComponentsInChildren<SpriteRenderer>();
+        SpriteRenderer spriteRenderer;
+        for (int i = 0; i < numberOfFrames; i++)
+        {
+            for (int j = 0; j < spriteRenderers.Length; j++)
+            {
+                spriteRenderer = spriteRenderers [j];
+                Color oldColor = spriteRenderer.color;
+                Color newColor = new Color(oldColor.r, oldColor.g, oldColor.b, oldColor.a - (1.0f / numberOfFrames));
+                spriteRenderer.color = newColor;
+            }
+            yield return null;
+        }
+        GameObject.Destroy(obj);
+    }
 }
