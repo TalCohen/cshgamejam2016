@@ -4,9 +4,10 @@ using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour {
     public GameObject PlayerPrefab;
-    private GameObject player;
-
     public GameObject EnemyPrefab;
+    public GameObject SpikesPrefab;
+
+    private GameObject player;
 
     private Sprite[] enemySprites;
     private Dictionary<string, int> enemySpritesMap;
@@ -23,6 +24,8 @@ public class GameManager : MonoBehaviour {
         InitializeEnemyAnimatorControllers();
 
         SpawnEnemy("Red", new Vector3(5, 0, 0));
+
+        Instantiate(SpikesPrefab, new Vector3(0, -5.0f, 0), Quaternion.identity);
 	}
 	
 	// Update is called once per frame
