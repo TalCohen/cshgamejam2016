@@ -31,13 +31,13 @@ public class PlayerCombat : MonoBehaviour {
         Utilities.ColorType spell = GetCurrentSpell("J1");
         if (spell != Utilities.ColorType.None)
         {
-            p1Spell = p1Spell;
+            p1Spell = spell;
         }
 
         spell = GetCurrentSpell("J2");
         if (spell != Utilities.ColorType.None)
         {
-            p2Spell = p1Spell;
+            p2Spell = spell;
         }
     }
 
