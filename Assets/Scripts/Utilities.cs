@@ -26,9 +26,9 @@ public static class Utilities {
             case ColorType.Blue:
                 return new Color(63/255.0f, 115/255.0f, 184/255.0f);
             case ColorType.Yellow:
-                return new Color(217/255.0f, 234/255, 12/255.0f);
+                return new Color(217/255.0f, 234/255.0f, 12/255.0f);
             case ColorType.Green:
-                return new Color(63/255.0f, 184/255, 80/255.0f);
+                return new Color(63/255.0f, 184/255.0f, 80/255.0f);
             case ColorType.Red:
                 return new Color(184/255.0f, 63/255.0f, 63/255.0f);
             case ColorType.Purple:

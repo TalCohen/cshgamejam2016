@@ -109,8 +109,10 @@ public class PlayerCombat : MonoBehaviour {
     {
         Utilities.ColorType spellColor = Utilities.GetCombinedColorType(p1Spell, p2Spell);
         print(string.Format("Casting {0}!", spellColor));
-        GameObject spell = (GameObject)Instantiate(SpellPrefab, this.gameObject.transform.position, Quaternion.identity);
-        spell.GetComponent<Spell>().SetColor(spellColor);
+        GameObject spellObject = (GameObject)Instantiate(SpellPrefab, this.gameObject.transform.position, Quaternion.identity);
+        Spell spell = spellObject.GetComponent<Spell>();
+        spell.SetColor(spellColor);
+        spell.SetDirection(aimDirection);
     }
 
     void ResetSpells()
