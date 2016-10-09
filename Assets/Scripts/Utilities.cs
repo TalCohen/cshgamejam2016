@@ -16,7 +16,7 @@ public static class Utilities {
 
     public static ColorType GetCombinedColorType(ColorType c1, ColorType c2)
     {
-        return (ColorType)(c1 & c2);
+        return (ColorType)(c1 | c2);
 //        if (c1 == c2)
 //        {
 //            return c1;
