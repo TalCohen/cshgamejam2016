@@ -48,32 +48,61 @@ public class PlayerMovement : MonoBehaviour {
         // Apply to the velocity
         velocity += new Vector2(moveX, moveY);
 
+        // Get which direction is our dominant one
+        int newDirection = GetDominantDirection(velocity);
+
+        // Attempt to change the direction
+        ChangeDirection(newDirection);
+
 		if (Input.GetKey(KeyCode.LeftArrow))
 		{
 			velocity.x -= MOVE_SPEED;
-            CheckChangeDirection(LEFT_DIRECTION);
+            ChangeDirection(LEFT_DIRECTION);
 		}
 		
 		if (Input.GetKey(KeyCode.RightArrow))
 		{
 			velocity.x += MOVE_SPEED;
-            CheckChangeDirection(RIGHT_DIRECTION);
+            ChangeDirection(RIGHT_DIRECTION);
 		}
 		
 		if (Input.GetKey(KeyCode.UpArrow))
 		{
 			velocity.y += MOVE_SPEED;
-            CheckChangeDirection(UP_DIRECTION);
+            ChangeDirection(UP_DIRECTION);
 		}
 		
 		if (Input.GetKey(KeyCode.DownArrow))
 		{
 			velocity.y -= MOVE_SPEED;
-            CheckChangeDirection(DOWN_DIRECTION);
+            ChangeDirection(DOWN_DIRECTION);
 		}
 	}
 
-    private void CheckChangeDirection(int newDirection)
+    private int GetDominantDirection(Vector2 velocity)
+    {
+        if (velocity.x > velocity.y)
+        {
+            if (velocity.x > 0)
+            {
+                return RIGHT_DIRECTION;
+            } else
+            {
+                return LEFT_DIRECTION;
+            }
+        } else
+        {
+            if (velocity.y > 0)
+            {
+                return UP_DIRECTION;
+            } else
+            {
+                return DOWN_DIRECTION;
+            }
+        }
+    }
+
+    private void ChangeDirection(int newDirection)
     {
         if (newDirection != direction)
         {
