@@ -1,24 +1,87 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class PlayerCombat : MonoBehaviour {
     public GameObject SpellPrefab;
 
-    private Utilities.ColorType p1Spell;
-    private Utilities.ColorType p2Spell;
+    private Utilities.ColorType j1Spell;
+    private Utilities.ColorType j2Spell;
 
     private Vector2 aimDirection;
 
+    private bool isAlive;
+    private int health;
+
+    private bool isInvincible;
+    private float invincibilityTimer;
+    private float nextIFrameChange;
+
+    private static float IFRAME_CHANGE_RATIO = 0.3f;
+    private static float MAX_INVINCIBILITY_TIME = 2.0f;
+
+    // So we don't have to get it so often
+    private SpriteRenderer spriteRenderer;
+
 	// Use this for initialization
 	void Start () {
-        p1Spell = Utilities.ColorType.None;
-        p2Spell = Utilities.ColorType.None;
+        j1Spell = Utilities.ColorType.None;
+        j2Spell = Utilities.ColorType.None;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+        CheckInvincibility();
         GetInput();
 	}
+
+    void Awake()
+    {
+        isAlive = true;
+        health = 100;
+        isInvincible = false;
+        spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
+    private void ResetInvincibility()
+    {
+        //StartCoroutine("ResetInvincibilityHelper");
+        isInvincible = true;
+        invincibilityTimer = 0.0f;
+        nextIFrameChange = 0.0f;
+    }
+
+    private void CheckInvincibility()
+    {
+        if (isInvincible)
+        {
+            // Subtract the time from the timer
+            invincibilityTimer += Time.deltaTime;
+
+            // Check to see if we should still be invincible
+            if (invincibilityTimer < MAX_INVINCIBILITY_TIME)
+            {
+                // If we should change our iframe
+                if (invincibilityTimer > nextIFrameChange)
+                {
+                    FlashSprite();
+                }
+
+            }
+            else
+            {
+                isInvincible = false;
+                Color oldColor = spriteRenderer.color;
+                spriteRenderer.color = new Color(oldColor.r, oldColor.g, oldColor.b, 1);
+            }
+        }
+    }
+
+    private void FlashSprite()
+    {
+        nextIFrameChange += Mathf.Max(0.1f, IFRAME_CHANGE_RATIO * (1 - (invincibilityTimer/MAX_INVINCIBILITY_TIME)));
+        Color oldColor = spriteRenderer.color;
+        spriteRenderer.color = new Color(oldColor.r, oldColor.g, oldColor.b, 1-oldColor.a);
+    }
 
     private void GetInput()
     {
@@ -28,26 +91,24 @@ public class PlayerCombat : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            p1Spell = Utilities.ColorType.Red;
-            p2Spell = Utilities.ColorType.Blue;
-            CastSpell();
+            CastSpell(Utilities.ColorType.Red);
             ResetSpells();
         }
     }
 
     private void UpdateSpells()
     {
-        // Update the spells of each player
+        // Update the spells of each joystick
         Utilities.ColorType spell = GetCurrentSpell("J1");
         if (spell != Utilities.ColorType.None)
         {
-            p1Spell = spell;
+            j1Spell = spell;
         }
 
         spell = GetCurrentSpell("J2");
         if (spell != Utilities.ColorType.None)
         {
-            p2Spell = spell;
+            j2Spell = spell;
         }
     }
 
@@ -83,41 +144,103 @@ public class PlayerCombat : MonoBehaviour {
         float aimY = Utilities.GetAveragedAxis("AimY");
         
         // Set as the aim direction
-        aimDirection = new Vector2(aimX, aimY);
+        aimDirection = new Vector2(aimX, aimY).normalized;
     }
 
     private void CheckCastSpell()
     {
-        // Check to see if either player is trying to cast the spell
+        // Check to see if either joystick is trying to cast the spell
         if (Input.GetButtonDown("J1CastSpell") || Input.GetButtonDown("J2CastSpell"))
         {
-            // Check to see if either player doesn't have a spell selected
-            if (p1Spell == Utilities.ColorType.None || p2Spell == Utilities.ColorType.None)
+            // Check to see if either joystick doesn't have a spell selected
+            if (j1Spell == Utilities.ColorType.None || j2Spell == Utilities.ColorType.None)
             {
                 // Give some kind of feedback letting them know they need to choose their spells
                 print("Both players must have a spell chosen.");
             }
             else
             {
-                CastSpell();
+                // Get the color of the spell (combination of each joystick's chosen color)
+                Utilities.ColorType spellColorType = Utilities.GetCombinedColorType(j1Spell, j2Spell);
+
+                // Cast the spell of that color
+                CastSpell(spellColorType);
+
+                // Reset the joystick's chosen spells
                 ResetSpells();
             }
         }
     }
 
-    void CastSpell()
+    private void CastSpell(Utilities.ColorType spellColorType)
     {
-        Utilities.ColorType spellColor = Utilities.GetCombinedColorType(p1Spell, p2Spell);
-        print(string.Format("Casting {0}!", spellColor));
+        print(string.Format("Casting {0}!", spellColorType));
+
+        // Create the spell object
         GameObject spellObject = (GameObject)Instantiate(SpellPrefab, this.gameObject.transform.position, Quaternion.identity);
         Spell spell = spellObject.GetComponent<Spell>();
-        spell.SetColor(spellColor);
+        spell.SetColorType(spellColorType);
         spell.SetDirection(aimDirection);
     }
 
-    void ResetSpells()
+    private void ResetSpells()
     {
-        p1Spell = Utilities.ColorType.None;
-        p2Spell = Utilities.ColorType.None;
+        j1Spell = Utilities.ColorType.None;
+        j2Spell = Utilities.ColorType.None;
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        HandleTrigger(other);
+    }
+
+    void OnTriggerStay2D(Collider2D other)
+    {
+        HandleTrigger(other);
+    }
+
+    private void HandleTrigger(Collider2D other)
+    {
+        if (other.tag == "Enemy")
+        {
+            // Hit by enemy, lose health
+            Enemy enemy = other.GetComponent<Enemy>();
+            TakeDamage(enemy.damage);
+            isInvincible = true;
+        }
+        else if (other.tag == "Spikes")
+        {
+            // Hit by spikes, lose health
+            Spikes spikes = other.GetComponent<Spikes>();
+            TakeDamage(spikes.damage);
+        }
+    }
+
+    private void TakeDamage(int damage)
+    {
+        // Make sure we aren't invincible
+        if (isInvincible)
+        {
+            return;
+        }
+
+        // Lose some health
+        health -= damage;
+        print("Lost health...");
+        print(health);
+    
+
+        // Check to see if we're alive
+        if (health > 0)
+        {
+            // Still alive - make immune to damage for a bit
+            ResetInvincibility();
+        } else
+        {
+            // Oh no! We've died!
+            isAlive = false;
+            transform.position = new Vector3();
+            print("We've died!");
+        }
     }
 }

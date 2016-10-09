@@ -6,20 +6,25 @@ public class PlayerMovement : MonoBehaviour {
 
 	private Vector2 velocity;
     private Vector2 acceleration;
+
+    private GameObject camera;
 	
 	// Use this for initialization
 	void Start () {
 		velocity = Vector2.zero;
 		acceleration = Vector2.zero;
+
+        camera = GameObject.FindWithTag("MainCamera");
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		GetInput();
 		UpdateMovement();
+        UpdateCamera();
 	}
 	
-	void GetInput()
+	private void GetInput()
 	{
 		// Get the move axis values
         float moveX = Utilities.GetAveragedAxis("MoveX") * MOVE_SPEED;
@@ -49,11 +54,19 @@ public class PlayerMovement : MonoBehaviour {
 		}
 	}
 	
-	void UpdateMovement()
+	private void UpdateMovement()
 	{
 		velocity += acceleration;
 		gameObject.transform.position += (Vector3)velocity * Time.deltaTime;
 		acceleration = Vector2.zero;
 		velocity = Vector2.zero;
 	}
+
+    private void UpdateCamera()
+    {
+        camera.transform.position = new Vector3(
+            this.gameObject.transform.position.x,
+            this.gameObject.transform.position.y,
+            camera.transform.position.z);
+    }
 }

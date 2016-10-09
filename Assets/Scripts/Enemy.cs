@@ -10,13 +10,18 @@ public class Enemy : MonoBehaviour
     private Vector3 position;
     private Vector3 velocity;
 
-    private float speed = 2;
+    private static float MOVE_SPEED = 2;
+
+    private Utilities.ColorType colorType;
+
+    public int damage { get; private set; }
 
     // Use this for initialization
     void Start()
     {
         playerPos = gameManager.GetPlayerPosition();
         position = transform.position;
+        damage = 10;
     }
 
     // Update is called once per frame
@@ -31,12 +36,25 @@ public class Enemy : MonoBehaviour
     Vector3 UpdateVelocity(Vector3 playerPosition)
     {
         Vector3 velocity = playerPosition - transform.position;
-        velocity = velocity.normalized * speed;
+        velocity = velocity.normalized * MOVE_SPEED;
         return velocity;
     }
 
     public void SetGameManager(GameManager gameManager)
     {
         this.gameManager = gameManager;
+    }
+
+    public void SetColorType(Utilities.ColorType colorType)
+    {
+        if (this.colorType == Utilities.ColorType.None)
+        {
+            this.colorType = colorType;
+        }
+    }
+
+    public Utilities.ColorType GetColorType()
+    {
+        return this.colorType;
     }
 }

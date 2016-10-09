@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 using System.Collections;
 
 public static class Utilities {
@@ -38,6 +39,11 @@ public static class Utilities {
             default:
                 return new Color(0, 0, 0);
         }
+    }
+
+    public static ColorType StringToColorType(string colorString)
+    {
+        return (ColorType)Enum.Parse(typeof(ColorType), colorString);
     }
 
     public static float GetAveragedAxis(string axis)
