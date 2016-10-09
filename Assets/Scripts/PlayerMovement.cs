@@ -8,6 +8,8 @@ public class PlayerMovement : MonoBehaviour {
     private Vector2 acceleration;
 
     private GameObject camera;
+
+    private Animator animator;
 	
 	// Use this for initialization
 	void Start () {
@@ -15,6 +17,7 @@ public class PlayerMovement : MonoBehaviour {
 		acceleration = Vector2.zero;
 
         camera = GameObject.FindWithTag("MainCamera");
+        animator = GetComponent<Animator>();
 	}
 	
 	// Update is called once per frame
@@ -22,6 +25,7 @@ public class PlayerMovement : MonoBehaviour {
 		GetInput();
 		UpdateMovement();
         UpdateCamera();
+        UpdateAnimation();
 	}
 	
 	private void GetInput()
@@ -36,27 +40,33 @@ public class PlayerMovement : MonoBehaviour {
 		if (Input.GetKey(KeyCode.LeftArrow))
 		{
 			velocity.x -= MOVE_SPEED;
+            animator.SetInteger("Direction", 0);
 		}
 		
 		if (Input.GetKey(KeyCode.RightArrow))
 		{
 			velocity.x += MOVE_SPEED;
+            animator.SetInteger("Direction", 2);
 		}
 		
 		if (Input.GetKey(KeyCode.UpArrow))
 		{
 			velocity.y += MOVE_SPEED;
+            animator.SetInteger("Direction", 1);
 		}
 		
 		if (Input.GetKey(KeyCode.DownArrow))
 		{
 			velocity.y -= MOVE_SPEED;
+            animator.SetInteger("Direction", 3);
 		}
 	}
 	
 	private void UpdateMovement()
 	{
-		velocity += acceleration;
+        animator.SetFloat("Speed", velocity.magnitude);
+        print(velocity.magnitude);
+        velocity += acceleration;
 		gameObject.transform.position += (Vector3)velocity * Time.deltaTime;
 		acceleration = Vector2.zero;
 		velocity = Vector2.zero;
@@ -68,5 +78,10 @@ public class PlayerMovement : MonoBehaviour {
             this.gameObject.transform.position.x,
             this.gameObject.transform.position.y,
             camera.transform.position.z);
+    }
+
+    private void UpdateAnimation()
+    {
+        
     }
 }
